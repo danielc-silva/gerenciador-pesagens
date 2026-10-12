@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
-const API = "${BASE_URL}/piquetes";
+const API = `${BASE_URL}/piquetes`;
 
 function Piquetes() {
   const [rotulo, setRotulo] = useState("");
