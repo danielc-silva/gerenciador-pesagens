@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
-const API_PESAGENS = "http://localhost:3001/pesagens";
-const API_BOVINOS = "http://localhost:3001/bovinos";
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const API_PESAGENS = "${BASE_URL}/pesagens";
+const API_BOVINOS = "${BASE_URL}/bovinos";
 
 function PesagensPrivado() {
   const [pesoKg, setPesoKg] = useState("");

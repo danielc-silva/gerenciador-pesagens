@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
-const API_BOVINOS = "http://localhost:3001/bovinos";
-const API_PIQUETES = "http://localhost:3001/piquetes";
+const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const API_BOVINOS = `${BASE_URL}/bovinos`;
+const API_PIQUETES = `${BASE_URL}/piquetes`;
 
 function Bovinos() {
   const [nascimento, setNascimento] = useState("");
