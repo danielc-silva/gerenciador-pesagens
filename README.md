@@ -1,70 +1,68 @@
-# Getting Started with Create React App
+# Trabalho Prático 1 — Programação para a Web
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- **Instituição:** Instituto Federal Sul-rio-grandense (IFSUL) - Campus Passo Fundo
+- **Curso:** Bacharelado em Ciência da Computação
+- **Disciplina:** Programação para a Web
+- **Professora:** Jéssica Di Domênico
+- **Aluno:** Daniel Cipriano da Silva
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+### Repositórios do Projeto
 
-### `npm start`
+- **Aplicação Frontend (React / PWA):** [gerenciador-pesagens](https://github.com/danielc-silva/gerenciador-pesagens.git)
+- **Backend / API (Node.js / Express / Drizzle ORM):** [api-gerenciador-pesagens](https://github.com/danielc-silva/api-gerenciador-pesagens.git)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# Gerenciador de Pesagens - Frontend (PWA / React)
 
-### `npm test`
+Interface web responsiva e modular desenvolvida em **React** para o controle de manejo, alocação de bovinos e histórico de pesagens em fazendas. A aplicação consome a API desenvolvida em Node.js com PostgreSQL.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Tecnologias Utilizadas
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **React**
+- **React Router**
+- **Bootstrap 5** & **React-Bootstrap**
+- **Fetch API**
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Regras de Negócio e Funcionalidades
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+O sistema segue a hierarquia relacional e de dependência do domínio rural (1 para N):
 
-### `npm run eject`
+1. **Gestão de Piquetes:** Cadastro, edição e remoção de áreas/pastagens da fazenda, definindo rótulo e capacidade máxima.
+2. **Controle de Rebanho (Bovinos):** Cadastro e transferência de animais, vinculando cada bovino a um piquete cadastrado (`piquete_alocado` via FK).
+3. **Registro de Pesagens:** Lançamento de pesagens periódicas vinculadas ao número do brinco do animal (`brinco_aferido` via FK), com controle de visualização pública para o operador de campo e painel com edição/exclusão na área restrita.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Estrutura de Pastas e Componentes
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```text
+gerenciador-pesagens/
+├── node_modules/
+├── public/
+├── src/
+│   ├── App.css
+│   ├── App.jsx
+│   ├── BemVindo.jsx
+│   ├── Bovinos.jsx
+│   ├── Login.jsx
+│   ├── MenuPrivado.jsx
+│   ├── MenuPublico.jsx
+│   ├── NotFound.jsx
+│   ├── PesagensPrivado.jsx
+│   ├── PesagensPublico.jsx
+│   ├── Piquetes.jsx
+│   ├── Sobre.jsx
+│   ├── Usuario.jsx
+│   └── withAuth.jsx
+├── .env
+├── .gitignore
+├── package-lock.json
+├── package.json
+├── README.md
+└── vercel.json
