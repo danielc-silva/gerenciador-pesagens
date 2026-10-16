@@ -124,7 +124,7 @@ function PesagensPrivado() {
 
   return (
     <div>
-      <h2>{idEdicao ? `Editar Pesagem (Registro Nº ${idEdicao})` : "Registro de Pesagens (Administrativo)"}</h2>
+      <h2>{idEdicao ? `Editar Pesagem (Registro Nº ${idEdicao})` : "Registro de Pesagens"}</h2>
       {mensagem && <p><strong>Aviso:</strong> {mensagem}</p>}
 
       <form onSubmit={handleSalvar}>

@@ -82,7 +82,7 @@ function PesagensPublico() {
 
   return (
     <div>
-      <h2>Registro de Pesagens (Área de Campo)</h2>
+      <h2>Registro de Pesagens</h2>
       {mensagem && <p><strong>Aviso:</strong> {mensagem}</p>}
 
       <form onSubmit={handleSalvar}>
