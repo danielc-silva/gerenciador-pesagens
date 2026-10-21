@@ -127,8 +127,8 @@ function PesagensPublico() {
       <hr />
 
       <h3>Histórico de Pesagens</h3>
-      <table border="1" cellPadding="6">
-        <thead>
+      <table className="table table-striped table-hover table-bordered align-middle text-center">
+        <thead className="table-success">
           <tr>
             <th>ID</th>
             <th>Nº Brinco</th>
@@ -148,7 +148,9 @@ function PesagensPublico() {
             ))
           ) : (
             <tr>
-              <td colSpan="4">Nenhuma pesagem cadastrada no momento.</td>
+              <td colSpan="4" className="text-muted py-3">
+                Nenhuma pesagem cadastrada no momento.
+              </td>
             </tr>
           )}
         </tbody>

@@ -143,8 +143,8 @@ function Piquetes() {
       <hr />
 
       <h3>Lista de Piquetes</h3>
-      <table border="1" cellPadding="6">
-        <thead>
+      <table className="table table-striped table-hover table-bordered align-middle text-center">
+        <thead className="table-success">
           <tr>
             <th>ID</th>
             <th>Rótulo</th>
@@ -160,10 +160,16 @@ function Piquetes() {
                 <td>{p.rotulo}</td>
                 <td>{p.lotacaoMaxima}</td>
                 <td>
-                  <button onClick={() => handleRemover(p.idPiquete)}>
+                  <button
+                    className="btn btn-outline-danger btn-sm me-2"
+                    onClick={() => handleRemover(p.idPiquete)}
+                  >
                     Remover
                   </button>
-                  <button onClick={() => handleCarregarEdicao(p)} style={{ marginLeft: "6px" }}>
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => handleCarregarEdicao(p)}
+                  >
                     Editar
                   </button>
                 </td>
@@ -171,7 +177,9 @@ function Piquetes() {
             ))
           ) : (
             <tr>
-              <td colSpan="4">Nenhum piquete cadastrado.</td>
+              <td colSpan="4" className="text-muted py-3">
+                Nenhum piquete cadastrado.
+              </td>
             </tr>
           )}
         </tbody>

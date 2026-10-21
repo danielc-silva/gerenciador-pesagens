@@ -164,8 +164,8 @@ function Bovinos() {
       <hr />
 
       <h3>Rebanho Cadastrado</h3>
-      <table border="1" cellPadding="6">
-        <thead>
+      <table className="table table-striped table-hover table-bordered align-middle text-center">
+        <thead className="table-success">
           <tr>
             <th>Nº Brinco (ID)</th>
             <th>Nascimento</th>
@@ -181,8 +181,16 @@ function Bovinos() {
                 <td>{b.nascimento ? b.nascimento.split("T")[0] : ""}</td>
                 <td>{b.piqueteAlocado}</td>
                 <td>
-                  <button onClick={() => handleRemover(b.numeroBrinco)}>Remover</button>
-                  <button onClick={() => handleCarregarEdicao(b)} style={{ marginLeft: "6px" }}>
+                  <button
+                    className="btn btn-outline-danger btn-sm me-2"
+                    onClick={() => handleRemover(b.numeroBrinco)}
+                  >
+                    Remover
+                  </button>
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => handleCarregarEdicao(b)}
+                  >
                     Editar
                   </button>
                 </td>
@@ -190,7 +198,9 @@ function Bovinos() {
             ))
           ) : (
             <tr>
-              <td colSpan="4">Nenhum animal cadastrado no rebanho.</td>
+              <td colSpan="4" className="text-muted py-3">
+                Nenhum animal cadastrado no rebanho.
+              </td>
             </tr>
           )}
         </tbody>

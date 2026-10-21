@@ -177,8 +177,8 @@ function PesagensPrivado() {
       <hr />
 
       <h3>Histórico Geral de Pesagens</h3>
-      <table border="1" cellPadding="6">
-        <thead>
+      <table className="table table-striped table-hover table-bordered align-middle text-center">
+        <thead className="table-success">
           <tr>
             <th>ID</th>
             <th>Nº Brinco</th>
@@ -196,8 +196,16 @@ function PesagensPrivado() {
                 <td>{p.pesoKg} kg</td>
                 <td>{p.dataPesagem ? p.dataPesagem.split("T")[0] : ""}</td>
                 <td>
-                  <button onClick={() => handleRemover(p.idPesagem)}>Remover</button>
-                  <button onClick={() => handleCarregarEdicao(p)} style={{ marginLeft: "6px" }}>
+                  <button
+                    className="btn btn-outline-danger btn-sm me-2"
+                    onClick={() => handleRemover(p.idPesagem)}
+                  >
+                    Remover
+                  </button>
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => handleCarregarEdicao(p)}
+                  >
                     Editar
                   </button>
                 </td>
@@ -205,7 +213,9 @@ function PesagensPrivado() {
             ))
           ) : (
             <tr>
-              <td colSpan="5">Nenhum registro de pesagem encontrado.</td>
+              <td colSpan="5" className="text-muted py-3">
+                Nenhum registro de pesagem encontrado.
+              </td>
             </tr>
           )}
         </tbody>
