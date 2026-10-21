@@ -177,6 +177,7 @@ function PesagensPrivado() {
               type="date"
               className="form-control bg-white"
               value={dataPesagem}
+               max={new Date().toISOString().split("T")[0]}
               onChange={(e) => setDataPesagem(e.target.value)}
             />
           </div>
