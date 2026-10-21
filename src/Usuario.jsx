@@ -3,7 +3,7 @@ const Usuario = () => {
     return (
         <>
             <h1>Dados do usuário</h1>
-            <h2>Nome do usuário: {localStorage.getItem("usuario")}</h2>
+            <p><b>Nome do usuário:</b> {localStorage.getItem("usuario")}</p>
         </>
     )
 }

@@ -14,7 +14,7 @@ const MenuPublico = () => {
                         <Nav className="me-auto">
                             <NavLink className="nav-link active" exact="true" to="/pesagenspublico">Pesagens</NavLink>
                             <NavLink className="nav-link active" exact="true" to="/sobre">Sobre</NavLink>
-                             <NavLink className="nav-link active" exact="true" to="/login">Login</NavLink>
+                             <NavLink className="btn btn-outline-light rounded-pill px-3 ms-2" exact="true" to="/login">Login</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

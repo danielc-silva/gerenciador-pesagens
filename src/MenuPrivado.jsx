@@ -22,7 +22,7 @@ const MenuPrivado = () => {
                             <NavLink className="nav-link" to="/privado/usuario">
                                 Usuário: {localStorage.getItem("usuario")}
                             </NavLink>
-                            <NavLink className="nav-link" to="/privado/login">Logout</NavLink>
+                            <NavLink className="btn btn-outline-light rounded-pill px-3 ms-2" to="/privado/login">Logout</NavLink>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
