@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const MenuPrivado = () => {
     return (
         <>
-            <Navbar expand="lg" className="navbar navbar-expand-lg navbar-dark bg-secondary">
+            <Navbar expand="lg" className="navbar navbar-expand-lg navbar-dark bg-success">
                 <Container>
                     <NavLink className="navbar-brand" to="/privado">
                         Sys Gerência de Pesagens

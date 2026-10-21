@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 const MenuPublico = () => {
     return (
         <>
-            <Navbar expand="lg" className="navbar navbar-expand-lg navbar-dark bg-secondary">
+            <Navbar expand="lg" className="navbar navbar-expand-lg navbar-dark bg-success">
                 <Container>
                     <NavLink className="navbar-brand" exact="true" to="/">Sys Gerência de Pesagens</NavLink>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
