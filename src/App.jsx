@@ -11,7 +11,6 @@ import Usuario from "./Usuario";
 import Sobre from "./Sobre";
 import BemVindo from "./BemVindo"
 
-
 const router = createBrowserRouter([
   {
     path : "/",
