@@ -2,7 +2,7 @@ const BemVindo = () => {
   return (
     <div className="container py-4">
       <h2 className="text-success fw-bold mb-3">
-        Gerenciador de Pesagens Bovinas
+        Gerenciador de Pesagens de Bovinos
       </h2>
 
       <p className="text-muted">
