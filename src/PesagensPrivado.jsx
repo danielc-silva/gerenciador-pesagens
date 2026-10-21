@@ -123,105 +123,134 @@ function PesagensPrivado() {
   };
 
   return (
-    <div>
-      <h2>{idEdicao ? `Editar Pesagem (Registro Nº ${idEdicao})` : "Registro de Pesagens"}</h2>
-      {mensagem && <p><strong>Aviso:</strong> {mensagem}</p>}
+  <div className="container py-3">
+
+    <div
+      className="card shadow-sm p-4 mb-4 border-0"
+      style={{ backgroundColor: "#f8f9fa", borderRadius: "12px" }}
+    >
+      <h3 className="h5 fw-bold text-success mb-3">
+        {idEdicao ? `Editar Pesagem (Registro Nº ${idEdicao})` : "Registro de Pesagens"}
+      </h3>
+
+      {mensagem && (
+        <div className="alert alert-info py-2 px-3 mb-3 small" role="alert">
+          <strong>Aviso:</strong> {mensagem}
+        </div>
+      )}
 
       <form onSubmit={handleSalvar}>
-        <div>
-          <label>Bovino (Nº Brinco): </label>
-          <select
-            value={brincoAferido}
-            onChange={(e) => setBrincoAferido(e.target.value)}
-          >
-            <option value="">Selecione o animal...</option>
-            {bovinos.map((b) => (
-              <option key={b.numeroBrinco} value={b.numeroBrinco}>
-                Brinco Nº {b.numeroBrinco} (Nasc: {b.nascimento ? b.nascimento.split("T")[0] : ""})
-              </option>
-            ))}
-          </select>
-        </div>
-        <br />
-        <div>
-          <label>Peso (kg): </label>
-          <input
-            type="number"
-            step="0.01"
-            placeholder="Ex: 485.50"
-            value={pesoKg}
-            onChange={(e) => setPesoKg(e.target.value)}
-          />
-        </div>
-        <br />
-        <div>
-          <label>Data da Pesagem: </label>
-          <input
-            type="date"
-            value={dataPesagem}
-            onChange={(e) => setDataPesagem(e.target.value)}
-          />
-        </div>
-        <br />
-        <button type="submit">
-          {idEdicao ? "Salvar Alterações" : "Registrar Pesagem"}
-        </button>
+        <div className="row g-3">
+          <div className="col-12 col-md-6">
+            <label className="form-label fw-semibold small">Bovino (Nº Brinco):</label>
+            <select
+              className="form-select bg-white"
+              value={brincoAferido}
+              onChange={(e) => setBrincoAferido(e.target.value)}
+            >
+              <option value="">Selecione o animal...</option>
+              {bovinos.map((b) => (
+                <option key={b.numeroBrinco} value={b.numeroBrinco}>
+                  Brinco Nº {b.numeroBrinco} (Nasc: {b.nascimento ? b.nascimento.split("T")[0] : ""})
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {idEdicao && (
-          <button type="button" onClick={handleCancelarEdicao} style={{ marginLeft: "8px" }}>
-            Cancelar Edição
-          </button>
-        )}
+          <div className="col-12 col-md-3">
+            <label className="form-label fw-semibold small">Peso (kg):</label>
+            <input
+              type="number"
+              step="0.01"
+              min="1"
+              max="9999.99"
+              className="form-control bg-white"
+              placeholder="Ex: 485.50"
+              value={pesoKg}
+              onChange={(e) => setPesoKg(e.target.value)}
+            />
+          </div>
+
+          <div className="col-12 col-md-3">
+            <label className="form-label fw-semibold small">Data da Pesagem:</label>
+            <input
+              type="date"
+              className="form-control bg-white"
+              value={dataPesagem}
+              onChange={(e) => setDataPesagem(e.target.value)}
+            />
+          </div>
+
+          <div className="col-12 pt-2">
+            <button type="submit" className="btn btn-success px-4 me-2">
+              {idEdicao ? "Salvar Alterações" : "Registrar Pesagem"}
+            </button>
+
+            {idEdicao && (
+              <button
+                type="button"
+                className="btn btn-outline-secondary px-3"
+                onClick={handleCancelarEdicao}
+              >
+                Cancelar Edição
+              </button>
+            )}
+          </div>
+        </div>
       </form>
+    </div>
 
-      <hr />
-
-      <h3>Histórico Geral de Pesagens</h3>
-      <table className="table table-striped table-hover table-bordered align-middle text-center">
-        <thead className="table-success">
-          <tr>
-            <th>ID</th>
-            <th>Nº Brinco</th>
-            <th>Peso (kg)</th>
-            <th>Data</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pesagens.length > 0 ? (
-            pesagens.map((p) => (
-              <tr key={p.idPesagem}>
-                <td>{p.idPesagem}</td>
-                <td>{p.brincoAferido}</td>
-                <td>{p.pesoKg} kg</td>
-                <td>{p.dataPesagem ? p.dataPesagem.split("T")[0] : ""}</td>
-                <td>
-                  <button
-                    className="btn btn-outline-danger btn-sm me-2"
-                    onClick={() => handleRemover(p.idPesagem)}
-                  >
-                    Remover
-                  </button>
-                  <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => handleCarregarEdicao(p)}
-                  >
-                    Editar
-                  </button>
+    {/* Tabela */}
+    <div className="mt-4">
+      <h3 className="h5 fw-bold text-success mb-3">Histórico Geral de Pesagens</h3>
+      <div className="table-responsive shadow-sm" style={{ borderRadius: "8px", overflow: "hidden" }}>
+        <table className="table table-striped table-hover table-bordered align-middle text-center mb-0">
+          <thead className="table-success">
+            <tr>
+              <th>ID</th>
+              <th>Nº Brinco</th>
+              <th>Peso (kg)</th>
+              <th>Data</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pesagens.length > 0 ? (
+              pesagens.map((p) => (
+                <tr key={p.idPesagem}>
+                  <td>{p.idPesagem}</td>
+                  <td>{p.brincoAferido}</td>
+                  <td>{p.pesoKg} kg</td>
+                  <td>{p.dataPesagem ? p.dataPesagem.split("T")[0] : ""}</td>
+                  <td>
+                    <button
+                      className="btn btn-outline-danger btn-sm me-2"
+                      onClick={() => handleRemover(p.idPesagem)}
+                    >
+                      Remover
+                    </button>
+                    <button
+                      className="btn btn-outline-primary btn-sm"
+                      onClick={() => handleCarregarEdicao(p)}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-muted py-3">
+                  Nenhum registro de pesagem encontrado.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-muted py-3">
-                Nenhum registro de pesagem encontrado.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
-  );
+  </div>
+);
 }
 
 export default PesagensPrivado;

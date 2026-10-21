@@ -104,86 +104,112 @@ function Piquetes() {
   };
 
   return (
-    <div>
-      <h2>{idEdicao ? "Editar Piquete" : "Cadastrar Piquete"}</h2>
-      {mensagem && <p><strong>Aviso:</strong> {mensagem}</p>}
+    <div className="container py-3">
+      <div
+        className="card shadow-sm p-4 mb-4 border-0"
+        style={{ backgroundColor: "#f8f9fa", borderRadius: "12px" }}
+      >
+        <h3 className="h5 fw-bold text-success mb-3">
+          {idEdicao ? "Editar Piquete" : "Cadastrar Piquete"}
+        </h3>
 
-      <form onSubmit={handleSalvar}>
-        <div>
-          <label>Nome da Área: </label>
-          <input
-            type="text"
-            placeholder="Ex: Pasto Norte"
-            value={rotulo}
-            onChange={(e) => setRotulo(e.target.value)}
-          />
-        </div>
-        <br />
-        <div>
-          <label>Lotação Máxima (cabeças): </label>
-          <input
-            type="number"
-            placeholder="Ex: 20"
-            value={lotacaoMaxima}
-            onChange={(e) => setLotacaoMaxima(e.target.value)}
-          />
-        </div>
-        <br />
-        <button type="submit">
-          {idEdicao ? "Salvar Alterações" : "Cadastrar Piquete"}
-        </button>
-
-        {idEdicao && (
-          <button type="button" onClick={handleCancelarEdicao} style={{ marginLeft: "8px" }}>
-            Cancelar Edição
-          </button>
+        {mensagem && (
+          <div className="alert alert-info py-2 px-3 mb-3 small" role="alert">
+            <strong>Aviso:</strong> {mensagem}
+          </div>
         )}
-      </form>
 
-      <hr />
+        <form onSubmit={handleSalvar}>
+          <div className="row g-3">
+            <div className="col-12 col-md-7">
+              <label className="form-label fw-semibold small">Nome da Área / Rótulo:</label>
+              <input
+                type="text"
+                className="form-control bg-white"
+                placeholder="Ex: Pasto Norte"
+                value={rotulo}
+                onChange={(e) => setRotulo(e.target.value)}
+              />
+            </div>
 
-      <h3>Lista de Piquetes</h3>
-      <table className="table table-striped table-hover table-bordered align-middle text-center">
-        <thead className="table-success">
-          <tr>
-            <th>ID</th>
-            <th>Rótulo</th>
-            <th>Capacidade Máxima</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {piquetes.length > 0 ? (
-            piquetes.map((p) => (
-              <tr key={p.idPiquete}>
-                <td>{p.idPiquete}</td>
-                <td>{p.rotulo}</td>
-                <td>{p.lotacaoMaxima}</td>
-                <td>
-                  <button
-                    className="btn btn-outline-danger btn-sm me-2"
-                    onClick={() => handleRemover(p.idPiquete)}
-                  >
-                    Remover
-                  </button>
-                  <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => handleCarregarEdicao(p)}
-                  >
-                    Editar
-                  </button>
-                </td>
+            <div className="col-12 col-md-5">
+              <label className="form-label fw-semibold small">Lotação Máxima (cabeças):</label>
+              <input
+                type="number"
+                min="1"
+                className="form-control bg-white"
+                placeholder="Ex: 20"
+                value={lotacaoMaxima}
+                onChange={(e) => setLotacaoMaxima(e.target.value)}
+              />
+            </div>
+
+            <div className="col-12 pt-2">
+              <button type="submit" className="btn btn-success px-4 me-2">
+                {idEdicao ? "Salvar Alterações" : "Cadastrar Piquete"}
+              </button>
+
+              {idEdicao && (
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary px-3"
+                  onClick={handleCancelarEdicao}
+                >
+                  Cancelar Edição
+                </button>
+              )}
+            </div>
+          </div>
+        </form>
+      </div>
+
+      {/* Tabela */}
+      <div className="mt-4">
+        <h3 className="h5 fw-bold text-success mb-3">Lista de Piquetes</h3>
+        <div className="table-responsive shadow-sm" style={{ borderRadius: "8px", overflow: "hidden" }}>
+          <table className="table table-striped table-hover table-bordered align-middle text-center mb-0">
+            <thead className="table-success">
+              <tr>
+                <th>ID</th>
+                <th>Rótulo</th>
+                <th>Capacidade Máxima</th>
+                <th>Ações</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-muted py-3">
-                Nenhum piquete cadastrado.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {piquetes.length > 0 ? (
+                piquetes.map((p) => (
+                  <tr key={p.idPiquete}>
+                    <td>{p.idPiquete}</td>
+                    <td>{p.rotulo}</td>
+                    <td>{p.lotacaoMaxima}</td>
+                    <td>
+                      <button
+                        className="btn btn-outline-danger btn-sm me-2"
+                        onClick={() => handleRemover(p.idPiquete)}
+                      >
+                        Remover
+                      </button>
+                      <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => handleCarregarEdicao(p)}
+                      >
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-muted py-3">
+                    Nenhum piquete cadastrado.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

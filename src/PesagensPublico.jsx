@@ -81,80 +81,108 @@ function PesagensPublico() {
   };
 
   return (
-    <div>
-      <h2>Registro de Pesagens</h2>
-      {mensagem && <p><strong>Aviso:</strong> {mensagem}</p>}
+    <div className="container py-3">
 
-      <form onSubmit={handleSalvar}>
-        <div>
-          <label>Bovino (Nº Brinco): </label>
-          <select
-            value={brincoAferido}
-            onChange={(e) => setBrincoAferido(e.target.value)}
-          >
-            <option value="">Selecione o animal...</option>
-            {bovinos.map((b) => (
-              <option key={b.numeroBrinco} value={b.numeroBrinco}>
-                Brinco Nº {b.numeroBrinco} (Nasc: {b.nascimento ? b.nascimento.split("T")[0] : ""})
-              </option>
-            ))}
-          </select>
-        </div>
-        <br />
-        <div>
-          <label>Peso (kg): </label>
-          <input
-            type="number"
-            step="0.01"
-            placeholder="Ex: 485.50"
-            value={pesoKg}
-            onChange={(e) => setPesoKg(e.target.value)}
-          />
-        </div>
-        <br />
-        <div>
-          <label>Data da Pesagem: </label>
-          <input
-            type="date"
-            value={dataPesagem}
-            onChange={(e) => setDataPesagem(e.target.value)}
-          />
-        </div>
-        <br />
-        <button type="submit">Registrar Pesagem</button>
-      </form>
+      <div
+        className="card shadow-sm p-4 mb-4 border-0"
+        style={{ backgroundColor: "#f8f9fa", borderRadius: "12px" }}
+      >
+        <h3 className="h5 fw-bold text-success mb-3">
+          Registro de Pesagens
+        </h3>
 
-      <hr />
+        {mensagem && (
+          <div className="alert alert-info py-2 px-3 mb-3 small" role="alert">
+            <strong>Aviso:</strong> {mensagem}
+          </div>
+        )}
 
-      <h3>Histórico de Pesagens</h3>
-      <table className="table table-striped table-hover table-bordered align-middle text-center">
-        <thead className="table-success">
-          <tr>
-            <th>ID</th>
-            <th>Nº Brinco</th>
-            <th>Peso (kg)</th>
-            <th>Data</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pesagens.length > 0 ? (
-            pesagens.map((p) => (
-              <tr key={p.idPesagem}>
-                <td>{p.idPesagem}</td>
-                <td>{p.brincoAferido}</td>
-                <td>{p.pesoKg} kg</td>
-                <td>{p.dataPesagem ? p.dataPesagem.split("T")[0] : ""}</td>
+        <form onSubmit={handleSalvar}>
+          <div className="row g-3">
+            <div className="col-12 col-md-6">
+              <label className="form-label fw-semibold small">Bovino (Nº Brinco):</label>
+              <select
+                className="form-select bg-white"
+                value={brincoAferido}
+                onChange={(e) => setBrincoAferido(e.target.value)}
+              >
+                <option value="">Selecione o animal...</option>
+                {bovinos.map((b) => (
+                  <option key={b.numeroBrinco} value={b.numeroBrinco}>
+                    Brinco Nº {b.numeroBrinco} (Nasc: {b.nascimento ? b.nascimento.split("T")[0] : ""})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="col-12 col-md-3">
+              <label className="form-label fw-semibold small">Peso (kg):</label>
+              <input
+                type="number"
+                step="0.01"
+                min="1"
+                max="9999.99"
+                className="form-control bg-white"
+                placeholder="Ex: 485.50"
+                value={pesoKg}
+                onChange={(e) => setPesoKg(e.target.value)}
+              />
+            </div>
+
+            <div className="col-12 col-md-3">
+              <label className="form-label fw-semibold small">Data da Pesagem:</label>
+              <input
+                type="date"
+                className="form-control bg-white"
+                value={dataPesagem}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={(e) => setDataPesagem(e.target.value)}
+              />
+            </div>
+
+            <div className="col-12 pt-2">
+              <button type="submit" className="btn btn-success px-4">
+                Registrar Pesagem
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      {/* Tabela */}
+      <div className="mt-4">
+        <h3 className="h5 fw-bold text-success mb-3">Histórico de Pesagens</h3>
+        <div className="table-responsive shadow-sm" style={{ borderRadius: "8px", overflow: "hidden" }}>
+          <table className="table table-striped table-hover table-bordered align-middle text-center mb-0">
+            <thead className="table-success">
+              <tr>
+                <th>ID</th>
+                <th>Nº Brinco</th>
+                <th>Peso (kg)</th>
+                <th>Data</th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" className="text-muted py-3">
-                Nenhuma pesagem cadastrada no momento.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {pesagens.length > 0 ? (
+                pesagens.map((p) => (
+                  <tr key={p.idPesagem}>
+                    <td>{p.idPesagem}</td>
+                    <td>{p.brincoAferido}</td>
+                    <td>{p.pesoKg} kg</td>
+                    <td>{p.dataPesagem ? p.dataPesagem.split("T")[0] : ""}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-muted py-3">
+                    Nenhuma pesagem cadastrada no momento.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
