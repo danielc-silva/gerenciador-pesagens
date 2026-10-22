@@ -15,6 +15,7 @@ function Piquetes() {
   const carregarPiquetes = async () => {
     try {
       const res = await fetch(API);
+      // tranforma em uma array de obj do js
       const dados = await res.json();
 
       // so atualiza a list c realmente for um array
@@ -23,7 +24,8 @@ function Piquetes() {
       } else {
         setPiquetes([]);
         setMensagem(dados.erro || dados.mensagem || "Erro ao carregar a lista de piquetes.");
-      }
+      } // caso tenha mensagem de erro do banco mostra, caso a algum retorno da api mostra
+        //  caso nada mostra erro ao carregar a lista de piquetes
     } catch (err) {
       console.error("Erro ao buscar piquetes:", err);
       setPiquetes([]);
@@ -34,6 +36,8 @@ function Piquetes() {
   useEffect(() => {
     carregarPiquetes();
   }, []);
+  // [] diz para o react executar a função uma unica vez
+  // exatamente no momento em que o component terminar de carregar na tela pela primeira vez
 
   // preenche o formulário com os dados do piquete selecionado
   const handleCarregarEdicao = (piquete) => {
@@ -52,7 +56,7 @@ function Piquetes() {
 
   // salva, ve se é um post ou um put
   const handleSalvar = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // impede da pag ser recarregada pelo navegador ao submeter o form
     if (!rotulo || !lotacaoMaxima) {
       setMensagem("Preencha todos os campos.");
       return;
@@ -64,13 +68,14 @@ function Piquetes() {
     try {
       const res = await fetch(url, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" }, // avisa express que corpo da requisi está no format json
         body: JSON.stringify({ rotulo, lotacao_maxima: Number(lotacaoMaxima) }),
       });
-      const data = await res.json();
+      const data = await res.json(); // vai ler e converter a resposta enviada pelo express de volta para um obj JS
 
+      // verifica se a reposta foi de sucesso cód http de 200 a 299
       if (res.ok) {
-        handleCancelarEdicao();
+        handleCancelarEdicao(); // limpa os campos de edição
         setMensagem(data.mensagem);
         carregarPiquetes();
       } else {
@@ -91,7 +96,7 @@ function Piquetes() {
           setMensagem(data.mensagem || "Piquete removido com sucesso.");
           // Se estava editando o item removido, cancela a edição
           if (idEdicao === id) {
-            handleCancelarEdicao();
+            handleCancelarEdicao(); // só para limpar os campos caso foi editar e resolveu remover
           }
           carregarPiquetes();
         } else {
@@ -119,7 +124,8 @@ function Piquetes() {
           </div>
         )}
 
-        <form onSubmit={handleSalvar}>
+        {/* on submit conecta o envio do form a função salvar, isso é disparado quando clica enter dentro de qualquer campo */}
+        <form onSubmit={handleSalvar}> 
           <div className="row g-3">
             <div className="col-12 col-md-7">
               <label className="form-label fw-semibold small">Nome da Área / Rótulo:</label>
@@ -127,8 +133,9 @@ function Piquetes() {
                 type="text"
                 className="form-control bg-white"
                 placeholder="Ex: Pasto Norte"
-                value={rotulo}
-                onChange={(e) => setRotulo(e.target.value)}
+                value={rotulo} // o que esta escrito é o valor que tá no rotulo do react no caso no usestate
+                // toda vez que algo é digitado ou apagado o onchange pega o texto digt e atualiza o estado chamando o set
+                onChange={(e) => setRotulo(e.target.value)} 
               />
             </div>
 
@@ -177,8 +184,10 @@ function Piquetes() {
               </tr>
             </thead>
             <tbody>
+              {/* se for maior que 0 significa q a api devolveu dados e então tem ao menos um piquet salv */}
               {piquetes.length > 0 ? (
                 piquetes.map((p) => (
+                  // key atributo obrifatorio do react em listas servindo como identificador unico daqula linha
                   <tr key={p.idPiquete}>
                     <td>{p.idPiquete}</td>
                     <td>{p.rotulo}</td>

@@ -51,6 +51,7 @@ function Bovinos() {
   // carrega os dados do bovino selecionado nos campos
   const handleCarregarEdicao = (bovino) => {
     setBrincoEdicao(bovino.numeroBrinco);
+    // utiliza o separador entre a data e o tempo que e o T pegando primeira fatia onde só tem a datasem hr
     setNascimento(bovino.nascimento ? bovino.nascimento.split("T")[0] : "");
     setPiqueteAlocado(bovino.piqueteAlocado);
     setMensagem("");
@@ -65,7 +66,7 @@ function Bovinos() {
 
   // salva decidindo caso null novo cadastro no banco, caso seja um valor então é a edição de um cadastro no BD
   const handleSalvar = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //para evitar q o navegador recarregue o componet
     if (!nascimento || !piqueteAlocado) {
       setMensagem("Preencha todos os campos do formulário.");
       return;

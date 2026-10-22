@@ -68,7 +68,7 @@ function PesagensPrivado() {
 
   // salva para isso decide entr post e put criar oou editr
   const handleSalvar = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // nçao deixa o navegadro recarrecgar o component
     if (!pesoKg || !dataPesagem || !brincoAferido) {
       setMensagem("Preencha todos os campos do formulário.");
       return;
@@ -161,7 +161,7 @@ function PesagensPrivado() {
             <label className="form-label fw-semibold small">Peso (kg):</label>
             <input
               type="number"
-              step="0.01"
+              step="0.01" // vai incrementando de 0.01 ao clicar na setinha
               min="1"
               max="9999.99"
               className="form-control bg-white"
