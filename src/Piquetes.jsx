@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import withAuth from "./withAuth";
+import { getToken, getUsuario } from "./Autenticacao";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 const API = `${BASE_URL}/piquetes`;
 
 function Piquetes() {
+  let navigate = useNavigate();
+  const usuario = getUsuario();
+
   const [rotulo, setRotulo] = useState("");
   const [lotacaoMaxima, setLotacaoMaxima] = useState("");
   const [piquetes, setPiquetes] = useState([]);
@@ -14,7 +20,19 @@ function Piquetes() {
 
   const carregarPiquetes = async () => {
     try {
-      const res = await fetch(API);
+      const res = await fetch(API, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": getToken(),
+        },
+      });
+
+      if (res.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
       // tranforma em uma array de obj do js
       const dados = await res.json();
 
@@ -30,11 +48,13 @@ function Piquetes() {
       console.error("Erro ao buscar piquetes:", err);
       setPiquetes([]);
       setMensagem("Falha na conexão com a API.");
+      navigate("/login", { replace: true });
     }
   };
 
   useEffect(() => {
     carregarPiquetes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // [] diz para o react executar a função uma unica vez
   // exatamente no momento em que o component terminar de carregar na tela pela primeira vez
@@ -68,9 +88,18 @@ function Piquetes() {
     try {
       const res = await fetch(url, {
         method: metodo,
-        headers: { "Content-Type": "application/json" }, // avisa express que corpo da requisi está no format json
+        headers: {
+          "Content-Type": "application/json", // avisa express que corpo da requisi está no format json
+          "authorization": getToken(),
+        },
         body: JSON.stringify({ rotulo, lotacao_maxima: Number(lotacaoMaxima) }),
       });
+
+      if (res.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
       const data = await res.json(); // vai ler e converter a resposta enviada pelo express de volta para um obj JS
 
       // verifica se a reposta foi de sucesso cód http de 200 a 299
@@ -83,13 +112,26 @@ function Piquetes() {
       }
     } catch (err) {
       setMensagem("Falha na conexão com a API.");
+      navigate("/login", { replace: true });
     }
   };
 
   const handleRemover = async (id) => {
     if (window.confirm("Deseja excluir este piquete? Todos os animais vinculados também serão removidos.")) {
       try {
-        const res = await fetch(`${API}/${id}`, { method: "DELETE" });
+        const res = await fetch(`${API}/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "authorization": getToken(),
+          },
+        });
+
+        if (res.status === 401) {
+          navigate("/login", { replace: true });
+          return;
+        }
+
         const data = await res.json();
 
         if (res.ok) {
@@ -104,6 +146,7 @@ function Piquetes() {
         }
       } catch (err) {
         setMensagem("Falha ao comunicar com a API.");
+        navigate("/login", { replace: true });
       }
     }
   };
@@ -193,12 +236,14 @@ function Piquetes() {
                     <td>{p.rotulo}</td>
                     <td>{p.lotacaoMaxima}</td>
                     <td>
-                      <button
-                        className="btn btn-outline-danger btn-sm me-2"
-                        onClick={() => handleRemover(p.idPiquete)}
-                      >
-                        Remover
-                      </button>
+                      {usuario && usuario.tipo === "A" && (
+                        <button
+                          className="btn btn-outline-danger btn-sm me-2"
+                          onClick={() => handleRemover(p.idPiquete)}
+                        >
+                          Remover
+                        </button>
+                      )}
                       <button
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => handleCarregarEdicao(p)}
@@ -223,4 +268,4 @@ function Piquetes() {
   );
 }
 
-export default Piquetes;
+export default withAuth(Piquetes);

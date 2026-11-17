@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import withAuth from "./withAuth";
+import { getToken, getUsuario } from "./Autenticacao";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 const API_PESAGENS = `${BASE_URL}/pesagens`;
@@ -13,6 +16,9 @@ const formatarDataBR = (dataISO) => {
 };
 
 function PesagensPrivado() {
+  let navigate = useNavigate();
+  const usuario = getUsuario();
+
   const [pesoKg, setPesoKg] = useState("");
   const [dataPesagem, setDataPesagem] = useState("");
   const [brincoAferido, setBrincoAferido] = useState("");
@@ -25,8 +31,17 @@ function PesagensPrivado() {
 
   const carregarDados = async () => {
     try {
+      const headers = {
+        "Content-Type": "application/json",
+        "authorization": getToken(),
+      };
+
       // busca a lista de pesagens cadastrada no banco
-      const resPes = await fetch(API_PESAGENS);
+      const resPes = await fetch(API_PESAGENS, { method: "GET", headers });
+      if (resPes.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
       const dadosPes = await resPes.json();
 
       if (Array.isArray(dadosPes)) {
@@ -37,7 +52,11 @@ function PesagensPrivado() {
       }
 
       // busca a lista de animais para selecionar no cria ou editar
-      const resBov = await fetch(API_BOVINOS);
+      const resBov = await fetch(API_BOVINOS, { method: "GET", headers });
+      if (resBov.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
       const dadosBov = await resBov.json();
 
       if (Array.isArray(dadosBov)) {
@@ -50,11 +69,13 @@ function PesagensPrivado() {
       setPesagens([]);
       setBovinos([]);
       setMensagem("Falha na comunicação com o servidor.");
+      navigate("/login", { replace: true });
     }
   };
 
   useEffect(() => {
     carregarDados();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // carrega os dados da pesagen selecionada para a edição
@@ -88,13 +109,22 @@ function PesagensPrivado() {
     try {
       const res = await fetch(url, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": getToken(),
+        },
         body: JSON.stringify({
           peso_kg: Number(pesoKg),
           data_pesagem: dataPesagem,
           brinco_aferido: Number(brincoAferido),
         }),
       });
+
+      if (res.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
       const data = await res.json();
 
       if (res.ok) {
@@ -106,13 +136,26 @@ function PesagensPrivado() {
       }
     } catch (err) {
       setMensagem("Falha ao conectar com o servidor.");
+      navigate("/login", { replace: true });
     }
   };
 
   const handleRemover = async (id) => {
     if (window.confirm("Deseja realmente excluir este registro de pesagem?")) {
       try {
-        const res = await fetch(`${API_PESAGENS}/${id}`, { method: "DELETE" });
+        const res = await fetch(`${API_PESAGENS}/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "authorization": getToken(),
+          },
+        });
+
+        if (res.status === 401) {
+          navigate("/login", { replace: true });
+          return;
+        }
+
         const data = await res.json();
 
         if (res.ok) {
@@ -126,6 +169,7 @@ function PesagensPrivado() {
         }
       } catch (err) {
         setMensagem("Falha na comunicação com a API.");
+        navigate("/login", { replace: true });
       }
     }
   };
@@ -232,12 +276,14 @@ function PesagensPrivado() {
                     <td>{p.pesoKg} kg</td>
                     <td>{formatarDataBR(p.dataPesagem ? p.dataPesagem.split("T")[0] : "")}</td>
                     <td>
-                      <button
-                        className="btn btn-outline-danger btn-sm me-2"
-                        onClick={() => handleRemover(p.idPesagem)}
-                      >
-                        Remover
-                      </button>
+                      {usuario && usuario.tipo === "A" && (
+                        <button
+                          className="btn btn-outline-danger btn-sm me-2"
+                          onClick={() => handleRemover(p.idPesagem)}
+                        >
+                          Remover
+                        </button>
+                      )}
                       <button
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => handleCarregarEdicao(p)}
@@ -262,4 +308,4 @@ function PesagensPrivado() {
   );
 }
 
-export default PesagensPrivado;
+export default withAuth(PesagensPrivado);

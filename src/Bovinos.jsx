@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import withAuth from "./withAuth";
+import { getToken, getUsuario } from "./Autenticacao";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
 const API_BOVINOS = `${BASE_URL}/bovinos`;
 const API_PIQUETES = `${BASE_URL}/piquetes`;
 
 function Bovinos() {
+  let navigate = useNavigate();
+  const usuario = getUsuario();
+
   const [nascimento, setNascimento] = useState("");
   const [piqueteAlocado, setPiqueteAlocado] = useState("");
   const [bovinos, setBovinos] = useState([]);
@@ -16,8 +22,17 @@ function Bovinos() {
 
   const carregarDados = async () => {
     try {
+      const headers = {
+        "Content-Type": "application/json",
+        "authorization": getToken(),
+      };
+
       // busca os bovinos que estao no bd
-      const resBov = await fetch(API_BOVINOS);
+      const resBov = await fetch(API_BOVINOS, { method: "GET", headers });
+      if (resBov.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
       const dadosBov = await resBov.json();
 
       if (Array.isArray(dadosBov)) {
@@ -28,7 +43,11 @@ function Bovinos() {
       }
 
       // busca os piquetes para selecão ao cadastrar bovinos
-      const resPiq = await fetch(API_PIQUETES);
+      const resPiq = await fetch(API_PIQUETES, { method: "GET", headers });
+      if (resPiq.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
       const dadosPiq = await resPiq.json();
 
       if (Array.isArray(dadosPiq)) {
@@ -41,11 +60,13 @@ function Bovinos() {
       setBovinos([]);
       setPiquetes([]);
       setMensagem("Falha na comunicação com o servidor.");
+      navigate("/login", { replace: true });
     }
   };
 
   useEffect(() => {
     carregarDados();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Formata data AAAA-MM-DD para o padrão brasileiro DD/MM/AAAA
@@ -93,12 +114,21 @@ function Bovinos() {
     try {
       const res = await fetch(url, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": getToken(),
+        },
         body: JSON.stringify({
           nascimento,
           piquete_alocado: Number(piqueteAlocado),
         }),
       });
+
+      if (res.status === 401) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
       const data = await res.json();
 
       if (res.ok) {
@@ -110,6 +140,7 @@ function Bovinos() {
       }
     } catch (err) {
       setMensagem("Falha na comunicação com o servidor.");
+      navigate("/login", { replace: true });
     }
   };
 
@@ -117,7 +148,19 @@ function Bovinos() {
   const handleRemover = async (brinco) => {
     if (window.confirm(`Deseja remover o bovino brinco Nº ${brinco}? Todas as pesagens vinculadas também serão removidas.`)) {
       try {
-        const res = await fetch(`${API_BOVINOS}/${brinco}`, { method: "DELETE" });
+        const res = await fetch(`${API_BOVINOS}/${brinco}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "authorization": getToken(),
+          },
+        });
+
+        if (res.status === 401) {
+          navigate("/login", { replace: true });
+          return;
+        }
+
         const data = await res.json();
 
         if (res.ok) {
@@ -131,6 +174,7 @@ function Bovinos() {
         }
       } catch (err) {
         setMensagem("Falha na comunicação com o servidor.");
+        navigate("/login", { replace: true });
       }
     }
   };
@@ -220,12 +264,14 @@ function Bovinos() {
                     <td>{formatarDataBR(b.nascimento)}</td>
                     <td>{obterInfoPiquete(b.piqueteAlocado)}</td>
                     <td>
-                      <button
-                        className="btn btn-outline-danger btn-sm me-2"
-                        onClick={() => handleRemover(b.numeroBrinco)}
-                      >
-                        Remover
-                      </button>
+                      {usuario && usuario.tipo === "A" && (
+                        <button
+                          className="btn btn-outline-danger btn-sm me-2"
+                          onClick={() => handleRemover(b.numeroBrinco)}
+                        >
+                          Remover
+                        </button>
+                      )}
                       <button
                         className="btn btn-outline-primary btn-sm"
                         onClick={() => handleCarregarEdicao(b)}
@@ -250,4 +296,4 @@ function Bovinos() {
   );
 }
 
-export default Bovinos;
+export default withAuth(Bovinos);
