@@ -48,10 +48,25 @@ function Bovinos() {
     carregarDados();
   }, []);
 
+  // Formata data AAAA-MM-DD para o padrão brasileiro DD/MM/AAAA
+  const formatarDataBR = (dataISO) => {
+    if (!dataISO) return "";
+    const apenasData = dataISO.split("T")[0];
+    const [ano, mes, dia] = apenasData.split("-");
+    return `${dia}/${mes}/${ano}`;
+  };
+
+  // Busca o rótulo do piquete pelo ID para exibir junto na tabela
+  const obterInfoPiquete = (idPiquete) => {
+    const piqueteEncontrado = piquetes.find((p) => p.idPiquete === idPiquete);
+    return piqueteEncontrado
+      ? `${idPiquete} - ${piqueteEncontrado.rotulo}`
+      : `ID ${idPiquete}`;
+  };
+
   // carrega os dados do bovino selecionado nos campos
   const handleCarregarEdicao = (bovino) => {
     setBrincoEdicao(bovino.numeroBrinco);
-    // utiliza o separador entre a data e o tempo que e o T pegando primeira fatia onde só tem a datasem hr
     setNascimento(bovino.nascimento ? bovino.nascimento.split("T")[0] : "");
     setPiqueteAlocado(bovino.piqueteAlocado);
     setMensagem("");
@@ -66,7 +81,7 @@ function Bovinos() {
 
   // salva decidindo caso null novo cadastro no banco, caso seja um valor então é a edição de um cadastro no BD
   const handleSalvar = async (e) => {
-    e.preventDefault(); //para evitar q o navegador recarregue o componet
+    e.preventDefault();
     if (!nascimento || !piqueteAlocado) {
       setMensagem("Preencha todos os campos do formulário.");
       return;
@@ -91,7 +106,6 @@ function Bovinos() {
         setMensagem(data.mensagem || "Bovino salvo com sucesso!");
         carregarDados();
       } else {
-        // exibe a mensagem caso por exemplo o piquete esteja com lotação maxima
         setMensagem(data.mensagem || data.erro || "Erro ao salvar animal.");
       }
     } catch (err) {
@@ -160,7 +174,7 @@ function Bovinos() {
                 <option value="">Selecione o pasto...</option>
                 {piquetes.map((p) => (
                   <option key={p.idPiquete} value={p.idPiquete}>
-                    {p.rotulo} (Máx: {p.lotacaoMaxima})
+                    ID {p.idPiquete} - {p.rotulo} (Máx: {p.lotacaoMaxima} animais)
                   </option>
                 ))}
               </select>
@@ -194,7 +208,7 @@ function Bovinos() {
               <tr>
                 <th>Nº Brinco (ID)</th>
                 <th>Nascimento</th>
-                <th>Piquete ID</th>
+                <th>Piquete (ID - Rótulo)</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -203,8 +217,8 @@ function Bovinos() {
                 bovinos.map((b) => (
                   <tr key={b.numeroBrinco}>
                     <td>{b.numeroBrinco}</td>
-                    <td>{b.nascimento ? b.nascimento.split("T")[0] : ""}</td>
-                    <td>{b.piqueteAlocado}</td>
+                    <td>{formatarDataBR(b.nascimento)}</td>
+                    <td>{obterInfoPiquete(b.piqueteAlocado)}</td>
                     <td>
                       <button
                         className="btn btn-outline-danger btn-sm me-2"

@@ -12,6 +12,14 @@ function PesagensPublico() {
   const [bovinos, setBovinos] = useState([]);
   const [mensagem, setMensagem] = useState("");
 
+  // Formata data AAAA-MM-DD para o padrão brasileiro DD/MM/AAAA
+  const formatarDataBR = (dataISO) => {
+    if (!dataISO) return "";
+    const apenasData = dataISO.split("T")[0];
+    const [ano, mes, dia] = apenasData.split("-");
+    return `${dia}/${mes}/${ano}`;
+  };
+
   const carregarDados = async () => {
     try {
       // busca a a lista de pesagens
@@ -109,7 +117,7 @@ function PesagensPublico() {
                 <option value="">Selecione o animal...</option>
                 {bovinos.map((b) => (
                   <option key={b.numeroBrinco} value={b.numeroBrinco}>
-                    Brinco Nº {b.numeroBrinco} (Nasc: {b.nascimento ? b.nascimento.split("T")[0] : ""})
+                    Brinco Nº {b.numeroBrinco} (Nasc: {formatarDataBR(b.nascimento)})
                   </option>
                 ))}
               </select>
@@ -169,7 +177,7 @@ function PesagensPublico() {
                     <td>{p.idPesagem}</td>
                     <td>{p.brincoAferido}</td>
                     <td>{p.pesoKg} kg</td>
-                    <td>{p.dataPesagem ? p.dataPesagem.split("T")[0] : ""}</td>
+                    <td>{formatarDataBR(p.dataPesagem ? p.dataPesagem.split("T")[0] : "")}</td>
                   </tr>
                 ))
               ) : (
